@@ -16,7 +16,8 @@ import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Lie.Subalgebra
 import Mathlib.Algebra.Lie.Matrix
 import Mathlib.Topology.Instances.Matrix
-import Mathlib.Data.Complex.Basic
+import Mathlib.Analysis.Complex.Basic
+import Mathlib.LinearAlgebra.Complex.Module
 
 open Matrix
 
@@ -35,13 +36,14 @@ fichero `Mathlib/LinearAlgebra/UnitaryGroup.lean`. Mathlib ya proporciona
 hereda la topología producto de `Mathlib/Topology/Instances/Matrix.lean`. -/
 abbrev SU2 : Type := Matrix.specialUnitaryGroup (Fin 2) (ℂ)
 
-/-- Comprobaciones de que Mathlib da las instancias que necesitaremos. -/
+/- Comprobaciones de que Mathlib da las instancias que necesitaremos (la topología de ℂ
+viene de [MATHLIB: `Complex.instNormedField`], `Mathlib/Analysis/Complex/Basic.lean`). -/
 example : Group SU2 := inferInstance
 example : TopologicalSpace SU2 := inferInstance
 
 /-! ## 2. El álgebra de Lie su(2) -/
 
-/-- Estructura de anillo de Lie sobre las matrices dada por el conmutador `⁅X, Y⁆ = X*Y - Y*X`.
+/- Estructura de anillo de Lie sobre las matrices dada por el conmutador `⁅X, Y⁆ = X*Y - Y*X`.
 
 [MATHLIB: `LieRing.ofAssociativeRing`], fichero `Mathlib/Algebra/Lie/OfAssociative.lean`.
 Mathlib NO la declara como instancia global (para no interferir con otras estructuras de
@@ -49,8 +51,9 @@ corchete); en Mathlib se activa localmente con exactamente esta línea
 (p. ej. en `Mathlib/Algebra/Lie/Matrix.lean`). Hacemos lo mismo. -/
 attribute [local instance 100] LieRing.ofAssociativeRing
 
-/-- Con la instancia anterior, Mathlib da `LieAlgebra ℝ (Matrix (Fin 2) (Fin 2) ℂ)`
-vía [MATHLIB: `LieAlgebra.ofAssociativeAlgebra`]. -/
+/- Con la instancia anterior, Mathlib da `LieAlgebra ℝ (Matrix (Fin 2) (Fin 2) ℂ)`
+vía [MATHLIB: `LieAlgebra.ofAssociativeAlgebra`] y [MATHLIB: `Complex.instAlgebraOfReal`]
+(`Algebra ℝ ℂ`, en `Mathlib/LinearAlgebra/Complex/Module.lean`). -/
 example : LieAlgebra ℝ (Matrix (Fin 2) (Fin 2) ℂ) := inferInstance
 
 /-- `su2` : el álgebra de Lie real de SU(2): matrices 2×2 complejas antihermitianas
@@ -67,7 +70,7 @@ def su2 : LieSubalgebra ℝ (Matrix (Fin 2) (Fin 2) ℂ) where
   smul_mem' := sorry
   lie_mem' := sorry
 
-/-- `su2` es, en particular, un álgebra de Lie real (instancias que Mathlib da a cualquier
+/- `su2` es, en particular, un álgebra de Lie real (instancias que Mathlib da a cualquier
 `LieSubalgebra`). -/
 example : LieRing su2 := inferInstance
 example : LieAlgebra ℝ su2 := inferInstance

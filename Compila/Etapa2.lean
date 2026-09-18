@@ -50,7 +50,8 @@ class LieGroupCompactoConexo (G : Type*) extends
   /-- Invariancia de la norma bajo `Ad`. -/
   normSq_Ad : ∀ (g : G) (X : 𝔤), normSq (Ad g X) = normSq X
 
-attribute [instance] LieGroupCompactoConexo.instLieRing LieGroupCompactoConexo.instLieAlgebra
+attribute [instance_reducible, instance] LieGroupCompactoConexo.instLieRing
+  LieGroupCompactoConexo.instLieAlgebra
 
 /-- `lieAlgebra G` : el álgebra de Lie de `G` (campo `𝔤` de la clase). [PROPIO] -/
 abbrev lieAlgebra (G : Type*) [LieGroupCompactoConexo G] : Type :=
