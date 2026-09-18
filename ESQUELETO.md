@@ -2,7 +2,8 @@
 
 Estado del esqueleto formal de la cadena de resultados sobre la estructura
 F = (P, G) con G = SU(2). Solo definiciones y enunciados. Todas las
-demostraciones son `sorry`, salvo las cuatro triviales marcadas **PROBADO**.
+demostraciones son `sorry`, salvo las triviales marcadas **PROBADO** (cuatro sobre SU2 en
+Etapa1 y sus cuatro versiones genéricas en Etapa3).
 
 ## Entorno
 
@@ -162,5 +163,17 @@ Nombres del guion que se adaptaron a los reales de Mathlib:
 
 ## Verificación de `import Mathlib`
 
-PENDIENTE: se está compilando Mathlib completo desde fuente en segundo plano (6.122 módulos).
-Este apartado se actualiza al terminar.
+Mathlib v4.34.0 se compiló entero desde fuente en esta sesión (`lake build Mathlib`,
+8.923 módulos, 0 errores, unas dos horas en 4 núcleos). Después se compiló el archivo
+`test/ImportMathlib.lean`, que hace `import Mathlib` y comprueba con `#check` los nombres
+usados en el esqueleto:
+
+```
+lake env lean test/ImportMathlib.lean
+```
+
+Resultado: compila sin errores y confirma las firmas de `Matrix.specialUnitaryGroup`,
+`Matrix.specialOrthogonalGroup`, `LieAlgebra.IsSimple`, `LieGroup`, `Homeomorph`,
+`EuclideanSpace`, `Metric.sphere`, `IsConj` y `killingForm`. Es decir, `import Mathlib`
+funciona en este entorno; los cuatro archivos mantienen imports concretos solo para que
+`lake build` sea rápido, y se pueden sustituir por `import Mathlib` sin cambiar nada más.
