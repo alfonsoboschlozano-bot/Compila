@@ -79,7 +79,7 @@ enuncia como `Nonempty (Unique P)`, que es equivalente y sí es `Prop`.
 
 | Nombre | Qué es | Estado | Origen |
 |---|---|---|---|
-| `LieGroupCompactoConexo G` | clase: `Group`, `TopologicalSpace`, `IsTopologicalGroup`, `CompactSpace`, `ConnectedSpace`, más un álgebra de Lie real `𝔤`, `Ad : G →* (𝔤 ≃ₗ[ℝ] 𝔤)` y una forma cuadrática `normSq` `Ad`-invariante | COMPILA | Propio (construida con clases de Mathlib) |
+| `LieGroupCompactoConexo G` | clase: `Group`, `TopologicalSpace`, `IsTopologicalGroup`, `T2Space` (Hausdorff), `CompactSpace`, `ConnectedSpace`, más un álgebra de Lie real `𝔤`, `Ad : G →* (𝔤 ≃ₗ[ℝ] 𝔤)` **fiel** (`Ad_injective`) y una forma cuadrática `normSq` `Ad`-invariante | COMPILA | Propio (construida con clases de Mathlib) |
 | `lieAlgebra G` | el campo `𝔤` de la clase | COMPILA | Propio |
 | `esfera G` | `{X : lieAlgebra G | normSq X = 1}` | COMPILA | Propio |
 | `AlgebraSimple L` | `LieAlgebra.IsSimple ℝ L` | COMPILA | Mathlib (alias) |
@@ -92,14 +92,15 @@ enuncia como `Nonempty (Unique P)`, que es equivalente y sí es `Prop`.
 
 | Nombre | Qué es | Estado | Origen |
 |---|---|---|---|
-| `CurvaturaPositivaConstante G` | curvatura seccional positiva constante | COMPILA (declarado `opaque`, **NO FORMALIZADO**) | Propio, opaco |
+| `CurvaturaPositivaConstante G` | curvatura seccional positiva constante | COMPILA (declarado `opaque`, **NO FORMALIZADO**; **ya no se usa en A3**, se conserva como referencia) | Propio, opaco |
 | `A1_clausura G` | `CompactSpace G` | COMPILA | Mathlib |
 | `A2_convergencia P G` | `EsSingleton P ∧ Infinite G ∧ AlgebraSimple (lieAlgebra G)` | COMPILA | Mathlib+Propio |
-| `A3_relieve G` | `(⊤ : LieSubalgebra ℝ (lieAlgebra G)) ≠ ⊥ ∧ (∃ g h, g ≠ 1 ∧ h ≠ 1 ∧ ¬ IsConj g h) ∧ CurvaturaPositivaConstante G` | COMPILA | Mathlib (`LieSubalgebra`, `IsConj`) + Propio |
+| `A3_relieve G` | `(⊤ : LieSubalgebra ℝ (lieAlgebra G)) ≠ ⊥ ∧ (∃ g h, g ≠ 1 ∧ h ≠ 1 ∧ ¬ IsConj g h)` (sin curvatura) | COMPILA | Mathlib (`LieSubalgebra`, `IsConj`) |
 | `A4_isotropia G` | `AdTransitivaEnEsfera G` | COMPILA | Propio |
 | `C1 G` … `C5 G` | versiones genéricas de C1, C2, C3, C4 (compacto ∧ cerrado), C5 = polaridad | COMPILAN | Mathlib+Propio |
 | `DR P G` | `EsSingleton P ∧ Infinite G` | COMPILA | Mathlib |
 | `Continuo G` | `ConnectedSpace G` | COMPILA | Mathlib |
+| `A1_clausura_holds`, `C3_holds`, `C4_holds`, `Continuo_holds` | A1, C3, C4 y Continuo se cumplen para todo `G` de la clase | COMPILAN, **PROBADO** | — |
 | `convergencia` | `(A1 ∧ A2 ∧ A3 ∧ A4) ↔ (C1 ∧ C2 ∧ C3 ∧ C4 ∧ C5 ∧ DR ∧ Continuo)` | COMPILA (sorry) | — |
 | `corolario` | `(A1 ∧ A2 ∧ A3 ∧ A4) → Nonempty (G ≃* SU2) ∨ Nonempty (G ≃* SO3)` | COMPILA (sorry) | Mathlib: `MulEquiv` |
 
@@ -126,7 +127,9 @@ Nota sobre `lieAlgebra G ≠ ⊥`: un tipo no se compara con `⊥`; se escribe c
    clase anterior.
 7. **`CurvaturaPositivaConstante G`.** Mathlib v4.34.0 no tiene curvatura seccional, conexión
    de Levi-Civita ni métrica bi-invariante. Se deja como `opaque` (proposición con nombre y sin
-   contenido); es el único punto de la cadena que no está formalizado en absoluto.
+   contenido). **Se ha retirado de `A3_relieve`** porque, al ser opaca, hacía indemostrable la
+   dirección ← de `convergencia` (ver `ANALISIS_convergencia.md`); la declaración se conserva
+   solo como referencia.
 8. **Los predicados A1–A4, C1–C5, DR, Continuo** son definiciones propias a partir de piezas de
    Mathlib.
 
@@ -141,18 +144,21 @@ Nombres del guion que se adaptaron a los reales de Mathlib:
 
 ## Resumen
 
-1. **Enunciados**: 40 declaraciones (13 teoremas: 10 en Etapa1, 1 en Etapa2, 2 en Etapa3; y
-   27 definiciones, clases y predicados) y todas COMPILAN; 0 NO COMPILAN. De los 13 teoremas,
-   4 están **PROBADOS** (C3, C4_cerrado, DR_singleton, polaridad) y 9 quedan con `sorry`.
+1. **Enunciados**: 44 declaraciones (17 teoremas: 10 en Etapa1, 1 en Etapa2, 6 en Etapa3; y
+   27 definiciones, clases y predicados) y todas COMPILAN; 0 NO COMPILAN. De los 17 teoremas,
+   8 están **PROBADOS** (los cuatro triviales de Etapa1: C3, C4_cerrado, DR_singleton,
+   polaridad; y sus cuatro versiones genéricas en Etapa3: A1_clausura_holds, C3_holds,
+   C4_holds, Continuo_holds) y 9 quedan con `sorry`.
 2. **Definiciones propias**: 8 grupos de nociones no están en Mathlib (lista anterior); la única
    sin contenido matemático es `CurvaturaPositivaConstante`, que queda opaca.
-3. **Planteamiento**: el problema está bien planteado en el lenguaje formal salvo por dos
-   puntos que conviene tener presentes: (a) `CurvaturaPositivaConstante` es opaca, así que
-   `A3_relieve` y por tanto `convergencia` y `corolario` hablan de una proposición sin
-   definir; (b) `LieGroupCompactoConexo` es una clase propia, de modo que `unicidad` y
-   `corolario` son enunciados sobre esa clase, no sobre el `LieGroup` de Mathlib. Todo lo demás
-   (SU2, su2, Ad, esfera, simplicidad, compacidad, conexión, S³, SO3, isomorfismos de grupos)
-   usa nociones estándar de Mathlib y tipa correctamente.
+3. **Planteamiento**: el problema está bien planteado en el lenguaje formal, con una
+   salvedad: `LieGroupCompactoConexo` es una clase propia (grupo topológico Hausdorff compacto
+   conexo con un álgebra de Lie real y `Ad` fiel), de modo que `unicidad`, `convergencia` y
+   `corolario` son enunciados sobre esa clase, no sobre el `LieGroup` de Mathlib. La curvatura
+   se ha retirado de las hipótesis porque no era formalizable. Todo lo demás (SU2, su2, Ad,
+   esfera, simplicidad, compacidad, conexión, S³, SO3, isomorfismos de grupos) usa nociones
+   estándar de Mathlib y tipa correctamente. El análisis de qué partes de `convergencia` son
+   desempaquetado y cuáles tienen contenido está en `ANALISIS_convergencia.md`.
 
 ## Verificación de `import Mathlib`
 

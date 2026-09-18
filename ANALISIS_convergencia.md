@@ -1,5 +1,11 @@
 # Análisis del teorema `convergencia` (Etapa3.lean)
 
+> **Estado: recomendaciones APLICADAS.** Tras este análisis se quitó la curvatura de `A3_relieve`
+> y se añadieron a la clase `LieGroupCompactoConexo` la condición `T2Space G` (Hausdorff) y
+> `Ad_injective : Function.Injective Ad` (`Ad` fiel). Las partes triviales (A1, C3, C4,
+> Continuo) están probadas en `Etapa3.lean`. El texto siguiente describe la situación ANTES
+> de esos cambios, y es el motivo de haberlos hecho.
+
 Contexto: esqueleto Lean 4 + Mathlib v4.34.0 del proyecto `Compila`. Definiciones vigentes:
 
 ```

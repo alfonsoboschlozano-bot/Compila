@@ -3,7 +3,8 @@
 
 Cuatro predicados A1–A4 sobre estructuras (P, G), los siete predicados C1–C5, DR y Continuo
 (versiones sobre G genérico de los enunciados de `Etapa1.lean`), y los dos teoremas
-`convergencia` y `corolario`. Todas las demostraciones son `sorry`.
+`convergencia` y `corolario`. Todas las demostraciones son `sorry`, salvo las cuatro partes
+triviales marcadas **PROBADO** (`A1_clausura_holds`, `C3_holds`, `C4_holds`, `Continuo_holds`).
 -/
 
 import Compila.Etapa2
@@ -13,15 +14,17 @@ noncomputable section
 
 namespace Compila
 
-/-! ## Curvatura: predicado NO formalizado -/
+/-! ## Curvatura: predicado NO formalizado (ya no se usa en A3) -/
 
 /-- `CurvaturaPositivaConstante G` : "G, con su métrica bi-invariante, tiene curvatura seccional
 positiva constante".
 
 **NO FORMALIZADO.** [PROPIO, OPACO] Mathlib (v4.34.0) no tiene curvatura seccional, ni
 conexión de Levi-Civita, ni métrica bi-invariante para grupos de Lie, así que el predicado se
-declara `opaque`: es una proposición con nombre cuyo contenido no se especifica (equivale a
-`def ... : Prop := sorry` o a un `axiom` con ese tipo, pero sin introducir axiomas ni avisos). -/
+declara `opaque`: es una proposición con nombre cuyo contenido no se especifica.
+
+**Se ha retirado de `A3_relieve`**: al ser opaca no aporta información formal y hacía
+imposible la dirección ← de `convergencia`. Se conserva la declaración solo como referencia. -/
 opaque CurvaturaPositivaConstante (G : Type*) [LieGroupCompactoConexo G] : Prop
 
 /-! ## Axiomas A1–A4 -/
@@ -37,12 +40,11 @@ def A2_convergencia (P G : Type*) [LieGroupCompactoConexo G] : Prop :=
   EsSingleton P ∧ Infinite G ∧ AlgebraSimple (lieAlgebra G)
 
 /-- **A3 (relieve).** El álgebra de Lie no es trivial (`⊤ ≠ ⊥` en el retículo de subálgebras
-[MATHLIB: `LieSubalgebra`]), hay dos elementos no triviales no conjugados
-([MATHLIB: `IsConj`]), y la curvatura es positiva constante (opaco). -/
+[MATHLIB: `LieSubalgebra`]) y hay dos elementos no triviales no conjugados
+([MATHLIB: `IsConj`]). (La condición de curvatura se ha retirado, ver arriba.) -/
 def A3_relieve (G : Type*) [LieGroupCompactoConexo G] : Prop :=
   ((⊤ : LieSubalgebra ℝ (lieAlgebra G)) ≠ ⊥) ∧
-  (∃ g h : G, g ≠ 1 ∧ h ≠ 1 ∧ ¬ IsConj g h) ∧
-  CurvaturaPositivaConstante G
+  (∃ g h : G, g ≠ 1 ∧ h ≠ 1 ∧ ¬ IsConj g h)
 
 /-- **A4 (isotropía).** `Ad` es transitiva en la esfera unidad de `lieAlgebra G`. -/
 def A4_isotropia (G : Type*) [LieGroupCompactoConexo G] : Prop :=
@@ -77,6 +79,26 @@ def DR (P G : Type*) [LieGroupCompactoConexo G] : Prop :=
 /-- **Continuo.** Versión genérica de `Etapa1.continuo_conexo`. -/
 def Continuo (G : Type*) [LieGroupCompactoConexo G] : Prop :=
   ConnectedSpace G
+
+/-! ## Partes triviales de `convergencia` (PROBADO) -/
+
+/-- **PROBADO.** `A1_clausura G` se cumple siempre: `CompactSpace G` es parte de la clase. -/
+theorem A1_clausura_holds (G : Type*) [LieGroupCompactoConexo G] : A1_clausura G :=
+  inferInstanceAs (CompactSpace G)
+
+/-- **PROBADO.** `C3 G` se cumple siempre (`k = h * g⁻¹`), versión genérica de
+`Etapa1.C3_homogeneidad`. -/
+theorem C3_holds (G : Type*) [LieGroupCompactoConexo G] : C3 G :=
+  fun g h => ⟨h * g⁻¹, inv_mul_cancel_right h g⟩
+
+/-- **PROBADO.** `C4 G` se cumple siempre: compacidad viene de la clase y el cierre es
+`Set.mem_univ`, versión genérica de `Etapa1.C4_compacto` ∧ `C4_cerrado`. -/
+theorem C4_holds (G : Type*) [LieGroupCompactoConexo G] : C4 G :=
+  ⟨inferInstanceAs (CompactSpace G), fun _ _ => Set.mem_univ _⟩
+
+/-- **PROBADO.** `Continuo G` se cumple siempre: `ConnectedSpace G` es parte de la clase. -/
+theorem Continuo_holds (G : Type*) [LieGroupCompactoConexo G] : Continuo G :=
+  inferInstanceAs (ConnectedSpace G)
 
 /-! ## Teoremas -/
 

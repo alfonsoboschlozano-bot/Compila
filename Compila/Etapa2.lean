@@ -15,9 +15,11 @@ modelo con esquinas `I : ModelWithCorners 𝕜 E H`. Pero:
   2. `SU2` (subtipo de matrices) no tiene instancia `ChartedSpace` en Mathlib, así que ni
      siquiera podríamos instanciar `LieGroup` para nuestro ejemplo principal.
 Por ello definimos una clase mínima [PROPIO] que registra solo los datos que los enunciados
-necesitan: grupo topológico compacto y conexo, un álgebra de Lie real `𝔤`, la acción
-adjunta `Ad : G →* Aut(𝔤)` y una forma cuadrática `Ad`-invariante `normSq` (el papel de
-`−Killing` o de Frobenius) con la que hablar de "la esfera unidad".
+necesitan: grupo topológico Hausdorff, compacto y conexo, un álgebra de Lie real `𝔤`, la
+acción adjunta `Ad : G →* Aut(𝔤)` FIEL (inyectiva) y una forma cuadrática `Ad`-invariante
+`normSq` (el papel de `−Killing` o de Frobenius) con la que hablar de "la esfera unidad".
+Hausdorff y la fidelidad de `Ad` son lo que liga `G` con `𝔤`; sin ellas el teorema
+`convergencia` de Etapa3 tiene contramodelos triviales (topología indiscreta, `Ad` trivial).
 -/
 
 import Compila.Definiciones
@@ -34,17 +36,21 @@ namespace Compila
 /-- [PROPIO] Grupo de Lie compacto y conexo "mínimo": los datos necesarios para enunciar.
 
 Partes de Mathlib que reutiliza: [MATHLIB: `Group`], [MATHLIB: `TopologicalSpace`],
-[MATHLIB: `IsTopologicalGroup`], [MATHLIB: `CompactSpace`], [MATHLIB: `ConnectedSpace`],
+[MATHLIB: `IsTopologicalGroup`], [MATHLIB: `T2Space`], [MATHLIB: `CompactSpace`],
+[MATHLIB: `ConnectedSpace`], [MATHLIB: `Function.Injective`],
 [MATHLIB: `LieRing`], [MATHLIB: `LieAlgebra ℝ`], [MATHLIB: `LinearEquiv` (`≃ₗ[ℝ]`)] con su
 estructura de grupo [MATHLIB: `LinearEquiv.automorphismGroup`], [MATHLIB: `MonoidHom` (`→*`)]. -/
 class LieGroupCompactoConexo (G : Type*) extends
-    Group G, TopologicalSpace G, IsTopologicalGroup G, CompactSpace G, ConnectedSpace G where
+    Group G, TopologicalSpace G, IsTopologicalGroup G, T2Space G, CompactSpace G,
+    ConnectedSpace G where
   /-- El álgebra de Lie (real) de `G`. -/
   𝔤 : Type
   [instLieRing : LieRing 𝔤]
   [instLieAlgebra : LieAlgebra ℝ 𝔤]
   /-- Representación adjunta: homomorfismo de grupos `G →* Aut_ℝ(𝔤)`. -/
   Ad : G →* (𝔤 ≃ₗ[ℝ] 𝔤)
+  /-- `Ad` es fiel (inyectiva): es lo que hace que `𝔤` sea "el" álgebra de Lie de `G`. -/
+  Ad_injective : Function.Injective Ad
   /-- Cuadrado de una norma `Ad`-invariante sobre `𝔤` (p. ej. `−Killing` o Frobenius). -/
   normSq : 𝔤 → ℝ
   /-- Invariancia de la norma bajo `Ad`. -/
